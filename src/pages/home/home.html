@@ -1,14 +1,37 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
+       <ion-title>Reddit feed</ion-title>
+       <ion-buttons end>
+          <button ion-button icon-only (click)="showFilters()">
+              <ion-icon name="funnel" [style.color]="hasFilter ? 'orange' : 'inherit'"></ion-icon>
+          </button>
+       </ion-buttons> 
+   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)" [pullMin]=90>
+    <ion-refresher-content
+       pullingIcon="arrow-dropdown"
+       pullingText="Puxe para atualizar"
+       refreshingSpinner="circles"
+       refreshingText="Atualizando...">
+    </ion-refresher-content>
+  </ion-refresher> 
+  
+   <ion-list>
+      <button ion-item *ngFor="let feed of feeds" (click)="itemSelected(feed.data.url)">
+         <ion-thumbnail item-left>
+            <img [src]="feed.data.thumbnail">
+         </ion-thumbnail>
+         <h2>{{feed.data.title}}</h2>
+         <p>{{feed.data.domain}}</p>
+       </button>
+   </ion-list>
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content
+       loadingText="Carregando mais dados...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll> 
 </ion-content>
+
